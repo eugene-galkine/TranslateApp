@@ -1,0 +1,6 @@
+-Setup Android Studio project with tabbed view
+-Removed the settings menu in the top right as it is not needed
+-Setup basic layout for client as a fragment
+-added a button listener and populated the drop down boxes
+-Setup basic layout for translator as a fragment
+-added button listener and retrieved all the fields that would be needed in the create function
