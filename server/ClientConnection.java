@@ -1,47 +1,46 @@
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class ClientConnection extends Connection 
 {
-	private DataOutputStream outToServer;
-	private BufferedReader inFromServer ;
+	private String inputString;
+	
 	public ClientConnection(Socket inSocket) 
 	{
 		super(inSocket);
 		
 		try
 		{
-			//get the output stream
-			outToServer = new DataOutputStream(socket.getOutputStream());
+			//get the input text
+			String in;
+			inputString = "";
+			while (!socket.isClosed() && (in = inFromServer.readLine()) != null && !in.equals("END"))
+				inputString += in + "\n";
 			
-			//write result
-			outToServer.write("test result\nline2\nEND".getBytes());
+			System.out.println(inputString);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		};
 	}
 
-	@Override
-	public void run() 
+	public void postResult(String result)
 	{
-		try
+		try 
 		{
-            inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			//write the result and close the connection
+			outToServer.write((result + "\nEND\n").getBytes());
 			
-			String in;
-			while (!socket.isClosed() && (in = inFromServer.readLine()) != null && !in.equals("END"))
-				System.out.println(in);
-			
-			inFromServer.close();
-			outToServer.close();
-			socket.close();
-		} catch (IOException e)
+			close();
+		} catch (IOException e) 
 		{
 			e.printStackTrace();
-		};
+		}
 	}
+	
+	public String getInput()
+	{
+		return inputString;
+	}
+	
 }

@@ -19,6 +19,9 @@ public class NetConnector extends Thread
     private int port;
     private String messageOnLaunch;
     private Fragment owner;
+    private DataOutputStream outToServer;
+    private BufferedReader inFromServer;
+    private Socket socket;
 
     private NetConnector(Fragment fragment, int port, String message)
     {
@@ -35,12 +38,13 @@ public class NetConnector extends Thread
         try
         {
             //connect to server and get the reader and writer
-            Socket  socket = new Socket(IP, port);
-            DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
-            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            socket = new Socket(IP, port);
+            outToServer = new DataOutputStream(socket.getOutputStream());
+            inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             //write our request to the server
-            outToServer.write((messageOnLaunch + "\nEND\n").getBytes());
+            if (messageOnLaunch != null)
+                outToServer.write((messageOnLaunch + "\nEND\n").getBytes());
 
             //wait for response and put all the lines into one resulting message
             String in;
@@ -50,10 +54,41 @@ public class NetConnector extends Thread
                 result += in + "\n";
             }
 
+            //if we are the client, set the result and close connection, otherwise we wait for translator to respond before closing
             if (owner instanceof ClientFragment)
+            {
                 ((ClientFragment) owner).setResult(result);
 
-            //close everything
+                //close everything
+                close();
+            }
+            else
+            {
+                ((TranslatorFragment) owner).setRequest(result);
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendResult(String input)
+    {
+        try
+        {
+            outToServer.write((input + "\nEND\n").getBytes());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        close();
+    }
+
+    private void close()
+    {
+        //close everything
+        try
+        {
             outToServer.close();
             inFromServer.close();
             socket.close();
@@ -67,5 +102,11 @@ public class NetConnector extends Thread
     {
         //factory method for when requesting a translation
         new NetConnector(clientFragment, 1627, "From: " + ClientFragment.languages[fromId] + " To: " + ClientFragment.languages[toId] + "\n\n" + input);
+    }
+
+    public static NetConnector connectAsTranslator(TranslatorFragment clientFragment)
+    {
+        //factory method for when requesting a translation
+        return new NetConnector(clientFragment, 1628, null);
     }
 }

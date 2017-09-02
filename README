@@ -12,3 +12,8 @@ Steps I took to create this
 -started writing the server
 -wrote a basic connector on phone to make sure I can connect to server
 -finished the client side of the phone app with default reponse from server
+-finished the server
+-set up the translator side to connect
+-set up translator to take new message and post translation on submit
+-tested to make sure there were no crashes and it was stable
+-put up server with nohup

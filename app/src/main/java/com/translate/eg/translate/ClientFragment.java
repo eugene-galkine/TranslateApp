@@ -72,8 +72,9 @@ public class ClientFragment extends Fragment
         int toId = tspinner.getSelectedItemPosition();
         String input = inputText.getText().toString();
 
-        //spin up the progress bar
+        //spin up the progress bar and clear the result field
         progressBar.setVisibility(View.VISIBLE);
+        outputText.setText("");
 
         //hide the keyboard
         InputMethodManager inputMethodManager = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);

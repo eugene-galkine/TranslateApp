@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Translate</string>
     <string name="translation_message">Translation:\n%1$s</string>
+    <string name="translation_request">Please Translate:\n%1$s</string>
     <string name="submit_button">Submit</string>
     <string name="input_hint">Input Text</string>
     <string name="to_hint">To:</string>
     <string name="from_hint">From:</string>
     <string name="request_button">Request Translation</string>
     <string name="translation_hint">Translation</string>
+    <string name="thank_you">Thank You!</string>
 </resources>
