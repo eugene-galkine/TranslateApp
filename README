@@ -1,6 +1,14 @@
+There is one android studio project that is both the client and translator. The main activity has a tabbed view so you can switch between client and translator.
+
+Steps I took to create this
 -Setup Android Studio project with tabbed view
 -Removed the settings menu in the top right as it is not needed
 -Setup basic layout for client as a fragment
 -added a button listener and populated the drop down boxes
 -Setup basic layout for translator as a fragment
 -added button listener and retrieved all the fields that would be needed in the create function
+-set up aws ec2 server with ubuntu
+-drew some sketches of a basic outline for the server
+-started writing the server
+-wrote a basic connector on phone to make sure I can connect to server
+-finished the client side of the phone app with default reponse from server

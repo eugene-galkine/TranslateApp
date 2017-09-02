@@ -4,11 +4,13 @@ package com.translate.eg.translate;
  * Created by Eugene Galkine on 8/31/2017.
  */
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -17,7 +19,7 @@ import android.widget.TextView;
 
 public class ClientFragment extends Fragment
 {
-    private static final String[] languages = new String[]{"English", "Spanish", "French"};
+    public static final String[] languages = new String[]{"English", "Spanish", "French"};
 
     private Spinner fspinner;
     private Spinner tspinner;
@@ -73,6 +75,28 @@ public class ClientFragment extends Fragment
         //spin up the progress bar
         progressBar.setVisibility(View.VISIBLE);
 
+        //hide the keyboard
+        InputMethodManager inputMethodManager = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
+        //connect to server and send the our request
+        NetConnector.connectAsClient(this, fromId, toId, input);
+    }
+
+    public void setResult(final String in)
+    {
+        //run on UI thread
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                //hide the progress bar
+                progressBar.setVisibility(View.GONE);
+
+                //set the result field to our result
+                outputText.setText(getString(R.string.translation_message, in));
+            }
+        });
     }
 }
